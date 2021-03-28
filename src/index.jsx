@@ -60,8 +60,7 @@ const App = () => {
                 return replaceOperator(prevFormula, lastKey);
             } else {
                 return (prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey)
-                    .replace(/-+/, "-")
-                    .replace(/\D\.(\d*)/, "0.$1");
+                    .replace(/-+/, "-");
             }
         });
     }, [lastKey, currentValue, currentSign]);
@@ -80,9 +79,7 @@ const App = () => {
                         setLastKey("");
                         return prevState;
                     }
-                    return (prevState.replace(/^0/, "") + target.value)
-                        .replace(/\D\.(\d*)/, "0.$1");
-
+                    return (prevState.replace(/^0/, "") + target.value);
                 }
             } else {
                 const temp = prevState;
@@ -119,7 +116,7 @@ const App = () => {
     };
 
     const handleEqualsClick = ({ target }) => {
-        const calcualted = Math.round(100000000 * eval(formula)) / 100000000;
+        const calcualted = Math.round(100000000000 * eval(formula)) / 100000000000;
         setLastKey(`=${calcualted}`);
         setCurrentValue(String(calcualted));
         setEvaluated(calcualted);
