@@ -59,10 +59,11 @@ const App = () => {
             if (isOperator(lastKey) && lastKey !== "-") {
                 return replaceOperator(prevFormula, lastKey);
             } else {
-                return (prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey)
+                return (prevFormula.replace(/([-+/*])0$|^0[^-+/*]/, "$1") + lastKey)
                     .replace(/-+/, "-")
                     .replace(/(\d*)\.(\d*)/g, "$1.$2")
-                    .replace(/(^|[-+/*])[^0-9]*\.(\d*)/g, "$10.$2");
+                    .replace(/(^|[-+/*])[^0-9]*\.(\d*)/g, "$10.$2")
+                    .replace(/([-+/*])=(\d*)/, "$10=$2")
             }
         });
     }, [lastKey, currentValue, currentSign]);
