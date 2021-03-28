@@ -25,7 +25,7 @@ const endsWithOperator = (str) => {
 
 const replaceOperator = (str, operator) => {
     if (endsWithOperator(str)) {
-        const replaced = str.slice(0, -1) + operator;
+        const replaced = str.replace(/[-+/*]+/, operator);
         return replaced;
     } else {
         return str + operator;
@@ -59,7 +59,7 @@ const App = () => {
             if (isOperator(lastKey) && lastKey !== "-") {
                 return replaceOperator(prevFormula, lastKey);
             } else {
-                return prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey;
+                return (prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey).replace(/-+/, "-");
             }
         });
     }, [lastKey, currentValue, currentSign]);
