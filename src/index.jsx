@@ -60,7 +60,7 @@ const App = () => {
             if (isOperator(lastKey)) {
                 return replaceOperator(prevFormula, lastKey);
             } else {
-                return prevFormula.replace(/([-+/*])0$/, "$1") + lastKey;
+                return prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey;
             }
         });
     }, [lastKey, currentValue]);
@@ -72,7 +72,7 @@ const App = () => {
                 if (prevState === "DIGIT LIMIT MET") {
                     return "DIGIT LIMIT MET";
                 } else {
-                    return String(parseFloat(prevState + target.value));
+                    return prevState.replace(/^0/, "") + target.value;
                 }
             } else {
                 const temp = prevState;
@@ -232,7 +232,7 @@ const App = () => {
             </CalculatorButton>
             <CalculatorButton
                 id="decimal"
-                handleClick={handleClick}
+                handleClick={handleNumberClick}
                 value={"."}
                 className="button btn">
                 .
