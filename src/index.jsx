@@ -104,7 +104,7 @@ const App = () => {
     const handleEqualsClick = ({ target }) => {
         setLastKey("=");
         const calcualted = Math.round(100000000 * eval(formula)) / 100000000;
-        setCurrentValue(calcualted);
+        setCurrentValue(String(calcualted));
         setEvaluated(calcualted);
     };
 
