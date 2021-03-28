@@ -60,7 +60,13 @@ const App = () => {
                 return replaceOperator(prevFormula, lastKey);
             } else {
                 return (prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey)
+<<<<<<< HEAD
                     .replace(/-+/, "-");
+=======
+                    .replace(/-+/, "-")
+                    .replace(/(\d*)\.(\d*)/g, "$1.$2")
+                    .replace(/(^|[-+/*])[^0-9]*\.(\d*)/g, "$10.$2");
+>>>>>>> temp
             }
         });
     }, [lastKey, currentValue, currentSign]);
@@ -79,7 +85,14 @@ const App = () => {
                         setLastKey("");
                         return prevState;
                     }
+<<<<<<< HEAD
                     return (prevState.replace(/^0/, "") + target.value);
+=======
+                    return (prevState.replace(/^0/, "") + target.value)
+                        .replace(/(\d*)\.(\d*)/g, "$1.$2")
+                        .replace(/(^|[-+/*])[^0-9]*\.(\d*)/g, "$10.$2");
+
+>>>>>>> temp
                 }
             } else {
                 const temp = prevState;
