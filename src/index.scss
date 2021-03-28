@@ -7,7 +7,7 @@ $theme: (
 );
 
 $button-ids: display, clear, division, multiply, seven, eight, nine, add, four,
-    five, six, subtract, one, two, three, equal, sign, zero, decimal, equals;
+    five, six, subtract, one, two, three, equal, zero, decimal, equals;
 
 * {
     box-sizing: border-box;
@@ -49,7 +49,7 @@ body {
         "seven eight nine add"
         "four five six subtract"
         "one two three equals"
-        "sign zero decimal equals";
+        "zero zero decimal equals";
 
     @each $id in $button-ids {
         @if $id == clear {

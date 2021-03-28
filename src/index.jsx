@@ -32,8 +32,6 @@ const replaceOperator = (str, operator) => {
     }
 };
 
-const calculateString = (str) => {};
-
 const CalculatorButton = ({ children, id, handleClick, ...props }) => (
     <button type="button" id={id} {...props} onClick={handleClick}>
         {children}
@@ -54,16 +52,17 @@ const App = () => {
     const [currentOperator, setCurrentOperator] = React.useState();
     const [lastKey, setLastKey] = React.useState("");
     const [evaluated, setEvaluated] = React.useState("");
+    const [currentSign, setCurrentSign] = React.useState("pos");
 
     React.useEffect(() => {
         setFormula((prevFormula) => {
-            if (isOperator(lastKey)) {
+            if (isOperator(lastKey) && lastKey !== "-") {
                 return replaceOperator(prevFormula, lastKey);
             } else {
                 return prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey;
             }
         });
-    }, [lastKey, currentValue]);
+    }, [lastKey, currentValue, currentSign]);
 
     const handleNumberClick = ({ target }) => {
         setLastKey(target.value);
@@ -99,6 +98,7 @@ const App = () => {
         setPreviousValue("");
         setFormula("");
         setLastKey("");
+        setCurrentSign("pos");
     };
 
     const handleEqualsClick = ({ target }) => {
@@ -216,13 +216,6 @@ const App = () => {
                 +
             </CalculatorButton>
 
-            <CalculatorButton
-                id="sign"
-                handleClick={handleClick}
-                value={"sign"}
-                className="button btn">
-                +/-
-            </CalculatorButton>
             <CalculatorButton
                 id="zero"
                 handleClick={handleNumberClick}
