@@ -61,7 +61,8 @@ const App = () => {
             } else {
                 return (prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey)
                     .replace(/-+/, "-")
-                    .replace(/\D\.(\d*)/, "0.$1");
+                    .replace(/(\d*)\.(\d*)/g, "$1.$2")
+                    .replace(/(^|[-+/*])[^0-9]*\.(\d*)/g, "$10.$2");
             }
         });
     }, [lastKey, currentValue, currentSign]);
@@ -81,7 +82,8 @@ const App = () => {
                         return prevState;
                     }
                     return (prevState.replace(/^0/, "") + target.value)
-                        .replace(/\D\.(\d*)/, "0.$1");
+                        .replace(/(\d*)\.(\d*)/g, "$1.$2")
+                        .replace(/(^|[-+/*])[^0-9]*\.(\d*)/g, "$10.$2");
 
                 }
             } else {
