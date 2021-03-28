@@ -59,19 +59,30 @@ const App = () => {
             if (isOperator(lastKey) && lastKey !== "-") {
                 return replaceOperator(prevFormula, lastKey);
             } else {
-                return (prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey).replace(/-+/, "-");
+                return (prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey)
+                    .replace(/-+/, "-")
+                    .replace(/\.(\d*)/, "0.$1");
             }
         });
     }, [lastKey, currentValue, currentSign]);
 
     const handleNumberClick = ({ target }) => {
+        if (evaluated) {
+            handleClear();
+        }
         setLastKey(target.value);
         setCurrentValue((prevState) => {
             if (checkLength(prevState)) {
                 if (prevState === "DIGIT LIMIT MET") {
                     return "DIGIT LIMIT MET";
                 } else {
-                    return prevState.replace(/^0/, "") + target.value;
+                    if (target.value === "." && prevState.includes(".")) {
+                        setLastKey("");
+                        return prevState;
+                    }
+                    return (prevState.replace(/^0/, "") + target.value)
+                        .replace(/\.(\d*)/, "0.$1");
+
                 }
             } else {
                 const temp = prevState;
@@ -85,6 +96,11 @@ const App = () => {
 
     const handleOperatorClick = ({ target }) => {
         if (isOperator(target.value)) {
+            if (evaluated) {
+                setFormula(String(evaluated));
+                setPreviousValue(String(evaluated));
+                setEvaluated("");
+            }
             setCurrentOperator(target.value);
             setPreviousValue(currentValue);
             setCurrentValue("0");
@@ -99,16 +115,16 @@ const App = () => {
         setFormula("");
         setLastKey("");
         setCurrentSign("pos");
+        setEvaluated("");
     };
 
     const handleEqualsClick = ({ target }) => {
-        setLastKey("=");
         const calcualted = Math.round(100000000 * eval(formula)) / 100000000;
+        setLastKey(`=${calcualted}`);
         setCurrentValue(String(calcualted));
         setEvaluated(calcualted);
     };
 
-    const handleClick = () => null;
 
     return (
         <div id="calculator" className="card">
