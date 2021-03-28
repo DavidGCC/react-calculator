@@ -61,7 +61,7 @@ const App = () => {
             } else {
                 return (prevFormula.replace(/([-+/*])0$|^0/, "$1") + lastKey)
                     .replace(/-+/, "-")
-                    .replace(/\.(\d*)/, "0.$1");
+                    .replace(/\D\.(\d*)/, "0.$1");
             }
         });
     }, [lastKey, currentValue, currentSign]);
@@ -81,7 +81,7 @@ const App = () => {
                         return prevState;
                     }
                     return (prevState.replace(/^0/, "") + target.value)
-                        .replace(/\.(\d*)/, "0.$1");
+                        .replace(/\D\.(\d*)/, "0.$1");
 
                 }
             } else {
