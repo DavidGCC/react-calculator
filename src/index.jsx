@@ -9,13 +9,6 @@ const isOperator = (str) => {
     return operators.find((item) => item === str) && true;
 };
 
-const checkLength = (str) => {
-    if (str) {
-        return str.length < 23;
-    }
-    return false;
-};
-
 const endsWithOperator = (str) => {
     if (str) {
         return str[str.length - 1]?.match(/[\-+/*]/);
@@ -25,7 +18,7 @@ const endsWithOperator = (str) => {
 
 const replaceOperator = (str, operator) => {
     if (endsWithOperator(str)) {
-        const replaced = str.replace(/[-+/*]+/, operator);
+        const replaced = str.replace(/[-+/*]+$/, operator);
         return replaced;
     } else {
         return str + operator;
@@ -54,60 +47,63 @@ const App = () => {
     const [evaluated, setEvaluated] = React.useState("");
     const [currentSign, setCurrentSign] = React.useState("pos");
 
-    React.useEffect(() => {
-        setFormula((prevFormula) => {
-            if (isOperator(lastKey) && lastKey !== "-") {
-                return replaceOperator(prevFormula, lastKey);
-            } else {
-                return (prevFormula.replace(/([-+/*])0$|^0[^-+/*]/, "$1") + lastKey)
-                    .replace(/-+/, "-")
-                    .replace(/(\d*)\.(\d*)/g, "$1.$2")
-                    .replace(/(^|[-+/*])[^0-9]*\.(\d*)/g, "$10.$2")
-                    .replace(/([-+/*])=(\d*)/, "$10=$2")
-            }
-        });
-    }, [lastKey, currentValue, currentSign]);
+    // React.useEffect(() => {
+    //     setFormula((prevFormula) => {
+    //         if (isOperator(lastKey) && lastKey !== "-") {
+    //             return replaceOperator(prevFormula, lastKey);
+    //         } else {
+    //             // return (prevFormula.replace(/([-+/*])0$|^0[^-+/*]/, "$1") + lastKey)
+    //             //     .replace(/-+/, "-")
+    //             //     .replace(/(\d*)\.(\d*)/g, "$1.$2")
+    //             //     .replace(/(^|[-+/*])[^0-9]*\.(\d*)/g, "$10.$2")
+    //             //     .replace(/([-+/*])=(\d*)/, "$10=$2")
+    //             return prevFormula + lastKey;
+    //         }
+    //     });
+    // }, [lastKey, currentValue, currentSign]);
+
+    const maxDigitNumber = () => {
+        setCurrentValue("DIGIT LIMIT MET");
+        setPreviousValue(currentValue);
+        setTimeout(() => setCurrentValue(currentValue), 1000);
+    }
 
     const handleNumberClick = ({ target }) => {
-        if (evaluated) {
-            handleClear();
-        }
-        setLastKey(target.value);
-        setCurrentValue((prevState) => {
-            if (checkLength(prevState)) {
-                if (prevState === "DIGIT LIMIT MET") {
-                    return "DIGIT LIMIT MET";
-                } else {
-                    if (target.value === "." && prevState.includes(".")) {
-                        setLastKey("");
-                        return prevState;
-                    }
-                    return (prevState.replace(/^0/, "") + target.value)
-                        .replace(/(\d*)\.(\d*)/g, "$1.$2")
-                        .replace(/(^|[-+/*])[^0-9]*\.(\d*)/g, "$10.$2");
-
-                }
+        if (!currentValue.includes("LIMIT")) {
+            if (currentValue.length >= 23) {
+                maxDigitNumber();
+            } else if (evaluated) {
+                setCurrentValue(target.value);
+                setFormula(target.value);
+                setEvaluated("");
             } else {
-                const temp = prevState;
-                setCurrentValue("DIGIT LIMIT MET");
-                setTimeout(() => {
-                    setCurrentValue(temp);
-                }, 1000);
+                setCurrentValue(currentValue === "0" ? target.value : currentValue + target.value);
+                setFormula(formula => {
+                    if (formula === "0" || formula === "") {
+                        return target.value;
+                    } else if (currentValue === "0") {
+                        return formula;
+                    } else {
+                        return formula + target.value;
+                    }
+                })
             }
-        });
+        }
     };
 
     const handleOperatorClick = ({ target }) => {
-        if (isOperator(target.value)) {
-            if (evaluated) {
-                setFormula(String(evaluated));
-                setPreviousValue(String(evaluated));
-                setEvaluated("");
+        if (!currentValue.includes("LIMIT")) {
+            if (isOperator(target.value)) {
+                setCurrentOperator(target.value);
+                setCurrentValue(replaceOperator(currentValue, target.value));
+                setFormula(prevFormula => {
+                    if (target.value !== "-") {
+                        return replaceOperator(prevFormula, target.value);
+                    } else {
+                        return prevFormula.endsWith("-") ? prevFormula.slice(0, -1) : prevFormula + "-";
+                    }
+                })
             }
-            setCurrentOperator(target.value);
-            setPreviousValue(currentValue);
-            setCurrentValue("0");
-            setLastKey(target.value);
         }
     };
 
@@ -122,12 +118,12 @@ const App = () => {
     };
 
     const handleEqualsClick = ({ target }) => {
-        const calcualted = Math.round(100000000000 * eval(formula)) / 100000000000;
+        const calcualted =
+            Math.round(100000000000 * eval(formula)) / 100000000000;
         setLastKey(`=${calcualted}`);
         setCurrentValue(String(calcualted));
         setEvaluated(calcualted);
     };
-
 
     return (
         <div id="calculator" className="card">
