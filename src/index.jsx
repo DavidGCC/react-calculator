@@ -81,7 +81,7 @@ const App = () => {
                 setFormula(formula => {
                     if (formula === "0" || formula === "") {
                         return target.value;
-                    } else if (currentValue === "0") {
+                    } else if (target.value === "0" && currentValue === "0") {
                         return formula;
                     } else {
                         return formula + target.value;
@@ -95,7 +95,7 @@ const App = () => {
         if (!currentValue.includes("LIMIT")) {
             if (isOperator(target.value)) {
                 setCurrentOperator(target.value);
-                setCurrentValue(replaceOperator(currentValue, target.value));
+                setCurrentValue("0");
                 setFormula(prevFormula => {
                     if (target.value !== "-") {
                         return replaceOperator(prevFormula, target.value);
@@ -106,6 +106,13 @@ const App = () => {
             }
         }
     };
+
+    const handleDecimalClick = () => {
+        if (!currentValue.includes("LIMIT") && !currentValue.includes(".")) {
+            setCurrentValue(currentValue + ".");
+            setFormula(formula + ".");
+        }
+    } 
 
     const handleClear = () => {
         setCurrentOperator("");
@@ -240,7 +247,7 @@ const App = () => {
             </CalculatorButton>
             <CalculatorButton
                 id="decimal"
-                handleClick={handleNumberClick}
+                handleClick={handleDecimalClick}
                 value={"."}
                 className="button btn">
                 .
