@@ -77,14 +77,20 @@ const App = () => {
                 setFormula(target.value);
                 setEvaluated("");
             } else {
-                setCurrentValue(currentValue === "0" ? target.value : currentValue + target.value);
-                setFormula(formula => {
-                    if (formula === "0" || formula === "") {
+                setCurrentValue(prevValueState => {
+                    if (endsWithOperator(prevValueState) || prevValueState === "0") {
+                        return target.value;
+                    } else {
+                        return prevValueState + target.value;
+                    }
+                });
+                setFormula(prevFormulaState => {
+                    if (prevFormulaState === "0" || prevFormulaState === "") {
                         return target.value;
                     } else if (target.value === "0" && currentValue === "0") {
-                        return formula;
+                        return prevFormulaState;
                     } else {
-                        return formula + target.value;
+                        return prevFormulaState + target.value;
                     }
                 })
             }
@@ -94,8 +100,12 @@ const App = () => {
     const handleOperatorClick = ({ target }) => {
         if (!currentValue.includes("LIMIT")) {
             if (isOperator(target.value)) {
+                if (evaluated) {
+                    setFormula(evaluated);
+                    setEvaluated("");
+                }
                 setCurrentOperator(target.value);
-                setCurrentValue("0");
+                setCurrentValue(target.value);
                 setFormula(prevFormula => {
                     if (target.value !== "-") {
                         return replaceOperator(prevFormula, target.value);
@@ -125,11 +135,13 @@ const App = () => {
     };
 
     const handleEqualsClick = ({ target }) => {
+        const formulaToCalculate = formula.replace(/(\d*)=\d*$/, "$1").replace(/[-+/*]*$/, "");
         const calcualted =
-            Math.round(100000000000 * eval(formula)) / 100000000000;
+            Math.round(100000000000 * eval(formulaToCalculate)) / 100000000000;
         setLastKey(`=${calcualted}`);
         setCurrentValue(String(calcualted));
-        setEvaluated(calcualted);
+        setEvaluated(String(calcualted));
+        setFormula(formulaToCalculate + `=${calcualted}`);
     };
 
     return (
