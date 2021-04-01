@@ -66,7 +66,7 @@ const App = () => {
         setCurrentValue("DIGIT LIMIT MET");
         setPreviousValue(currentValue);
         setTimeout(() => setCurrentValue(currentValue), 1000);
-    }
+    };
 
     const handleNumberClick = ({ target }) => {
         if (!currentValue.includes("LIMIT")) {
@@ -77,14 +77,17 @@ const App = () => {
                 setFormula(target.value);
                 setEvaluated("");
             } else {
-                setCurrentValue(prevValueState => {
-                    if (endsWithOperator(prevValueState) || prevValueState === "0") {
+                setCurrentValue((prevValueState) => {
+                    if (
+                        endsWithOperator(prevValueState) ||
+                        prevValueState === "0"
+                    ) {
                         return target.value;
                     } else {
                         return prevValueState + target.value;
                     }
                 });
-                setFormula(prevFormulaState => {
+                setFormula((prevFormulaState) => {
                     if (prevFormulaState === "0" || prevFormulaState === "") {
                         return target.value;
                     } else if (target.value === "0" && currentValue === "0") {
@@ -92,7 +95,7 @@ const App = () => {
                     } else {
                         return prevFormulaState + target.value;
                     }
-                })
+                });
             }
         }
     };
@@ -106,23 +109,39 @@ const App = () => {
                 }
                 setCurrentOperator(target.value);
                 setCurrentValue(target.value);
-                setFormula(prevFormula => {
+                setFormula((prevFormula) => {
                     if (target.value !== "-") {
                         return replaceOperator(prevFormula, target.value);
                     } else {
-                        return prevFormula.endsWith("-") ? prevFormula.slice(0, -1) : prevFormula + "-";
+                        return prevFormula.endsWith("-")
+                            ? prevFormula.slice(0, -1)
+                            : prevFormula + "-";
                     }
-                })
+                });
             }
         }
     };
 
     const handleDecimalClick = () => {
-        if (!currentValue.includes("LIMIT") && !currentValue.includes(".")) {
-            setCurrentValue(currentValue + ".");
-            setFormula(formula + ".");
+        if (evaluated) {
+            setCurrentValue("0.");
+            setFormula("0.");
+            setEvaluated("");
+        } else {
+            if (
+                !currentValue.includes("LIMIT") &&
+                !currentValue.includes(".")
+            ) {
+                if (endsWithOperator(currentValue)) {
+                    setCurrentValue("0.");
+                    setFormula(formula + "0.");
+                } else {
+                    setCurrentValue(currentValue + ".");
+                    setFormula(formula === "" ? formula + "0." : formula + ".");
+                }
+            }
         }
-    } 
+    };
 
     const handleClear = () => {
         setCurrentOperator("");
@@ -135,7 +154,9 @@ const App = () => {
     };
 
     const handleEqualsClick = ({ target }) => {
-        const formulaToCalculate = formula.replace(/(\d*)=\d*$/, "$1").replace(/[-+/*]*$/, "");
+        const formulaToCalculate = formula
+            .replace(/(\d*)=\d*$/, "$1")
+            .replace(/[-+/*]*$/, "");
         const calcualted =
             Math.round(100000000000 * eval(formulaToCalculate)) / 100000000000;
         setLastKey(`=${calcualted}`);
