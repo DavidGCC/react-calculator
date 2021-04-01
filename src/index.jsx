@@ -161,6 +161,37 @@ const App = () => {
     const [formula, setFormula] = React.useState("");
     const [evaluated, setEvaluated] = React.useState("");
 
+    React.useEffect(() => {
+        const handleKeyPress = (e) => {
+            const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+            if (numbers.includes(e.key)) {
+                e.preventDefault();
+                handleNumberClick({
+                    target: {
+                        value: e.key
+                    }
+                })
+            } else if (operators.includes(e.key)) {
+                e.preventDefault();
+                handleOperatorClick({
+                    target: {
+                        value: e.key
+                    }
+                })
+            } else if (e.key === "Enter" && e.ctrlKey) {
+                handleClear();
+            } else if (e.key === "=" || e.key === "Enter") {
+                e.preventDefault();
+                handleEqualsClick();
+            } else if (e.key === ".") {
+                e.preventDefault();
+                handleDecimalClick();
+            }
+        }
+        window.addEventListener("keypress", handleKeyPress);
+        return () => removeEventListener("keypress", handleKeyPress);
+    })
+
     const maxDigitNumber = () => {
         setCurrentValue("DIGIT LIMIT MET");
         setPreviousValue(currentValue);
@@ -248,13 +279,12 @@ const App = () => {
         setEvaluated("");
     };
 
-    const handleEqualsClick = ({ target }) => {
+    const handleEqualsClick = () => {
         const formulaToCalculate = formula
             .replace(/(\d*)=\d*$/, "$1")
             .replace(/[-+/*]*$/, "");
         const calcualted =
             Math.round(100000000000 * eval(formulaToCalculate)) / 100000000000;
-        setLastKey(`=${calcualted}`);
         setCurrentValue(String(calcualted));
         setEvaluated(String(calcualted));
         setFormula(formulaToCalculate + `=${calcualted}`);
