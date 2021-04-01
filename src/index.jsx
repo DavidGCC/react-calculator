@@ -281,7 +281,7 @@ const App = () => {
 
     const handleEqualsClick = () => {
         const formulaToCalculate = formula
-            .replace(/(\d*)=\d*$/, "$1")
+            .replace(/(.*)=.*$/, "$1")
             .replace(/[-+/*]*$/, "");
         const calcualted =
             Math.round(100000000000 * eval(formulaToCalculate)) / 100000000000;
