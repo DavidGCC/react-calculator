@@ -38,29 +38,128 @@ const Display = ({ currentValue, formula }) => (
     </div>
 );
 
+const NumberButtons = ({ handleNumberClick }) => {
+    const numberClasses = "button btn numbers";
+    return (
+        <>
+            <CalculatorButton
+                id="seven"
+                handleClick={handleNumberClick}
+                value={7}
+                className={numberClasses}>
+                7
+            </CalculatorButton>
+            <CalculatorButton
+                id="eight"
+                handleClick={handleNumberClick}
+                value={8}
+                className={numberClasses}>
+                8
+            </CalculatorButton>
+            <CalculatorButton
+                id="nine"
+                handleClick={handleNumberClick}
+                value={9}
+                className={numberClasses}>
+                9
+            </CalculatorButton>
+
+            <CalculatorButton
+                id="four"
+                handleClick={handleNumberClick}
+                value={4}
+                className={numberClasses}>
+                4
+            </CalculatorButton>
+            <CalculatorButton
+                id="five"
+                handleClick={handleNumberClick}
+                value={5}
+                className={numberClasses}>
+                5
+            </CalculatorButton>
+            <CalculatorButton
+                id="six"
+                handleClick={handleNumberClick}
+                value={6}
+                className={numberClasses}>
+                6
+            </CalculatorButton>
+
+            <CalculatorButton
+                id="one"
+                handleClick={handleNumberClick}
+                value={1}
+                className={numberClasses}>
+                1
+            </CalculatorButton>
+            <CalculatorButton
+                id="two"
+                handleClick={handleNumberClick}
+                value={2}
+                className={numberClasses}>
+                2
+            </CalculatorButton>
+            <CalculatorButton
+                id="three"
+                handleClick={handleNumberClick}
+                value={3}
+                className={numberClasses}>
+                3
+            </CalculatorButton>
+
+            <CalculatorButton
+                id="zero"
+                handleClick={handleNumberClick}
+                value={0}
+                className={numberClasses}>
+                0
+            </CalculatorButton>
+        </>
+    );
+};
+
+const OperatorButtons = ({ handleOperatorClick }) => (
+    <>
+        <CalculatorButton
+            id="division"
+            handleClick={handleOperatorClick}
+            value={"/"}
+            className="button btn operators">
+            /
+        </CalculatorButton>
+
+        <CalculatorButton
+            id="multiply"
+            handleClick={handleOperatorClick}
+            value={"*"}
+            className="button btn operators">
+            X
+        </CalculatorButton>
+
+        <CalculatorButton
+            id="subtract"
+            handleClick={handleOperatorClick}
+            value={"-"}
+            className="button btn operators">
+            -
+        </CalculatorButton>
+
+        <CalculatorButton
+            id="add"
+            handleClick={handleOperatorClick}
+            value={"+"}
+            className="button btn operators">
+            +
+        </CalculatorButton>
+    </>
+);
+
 const App = () => {
     const [currentValue, setCurrentValue] = React.useState("0");
     const [previousValue, setPreviousValue] = React.useState("0");
     const [formula, setFormula] = React.useState("");
-    const [currentOperator, setCurrentOperator] = React.useState();
-    const [lastKey, setLastKey] = React.useState("");
     const [evaluated, setEvaluated] = React.useState("");
-    const [currentSign, setCurrentSign] = React.useState("pos");
-
-    // React.useEffect(() => {
-    //     setFormula((prevFormula) => {
-    //         if (isOperator(lastKey) && lastKey !== "-") {
-    //             return replaceOperator(prevFormula, lastKey);
-    //         } else {
-    //             // return (prevFormula.replace(/([-+/*])0$|^0[^-+/*]/, "$1") + lastKey)
-    //             //     .replace(/-+/, "-")
-    //             //     .replace(/(\d*)\.(\d*)/g, "$1.$2")
-    //             //     .replace(/(^|[-+/*])[^0-9]*\.(\d*)/g, "$10.$2")
-    //             //     .replace(/([-+/*])=(\d*)/, "$10=$2")
-    //             return prevFormula + lastKey;
-    //         }
-    //     });
-    // }, [lastKey, currentValue, currentSign]);
 
     const maxDigitNumber = () => {
         setCurrentValue("DIGIT LIMIT MET");
@@ -107,7 +206,6 @@ const App = () => {
                     setFormula(evaluated);
                     setEvaluated("");
                 }
-                setCurrentOperator(target.value);
                 setCurrentValue(target.value);
                 setFormula((prevFormula) => {
                     if (target.value !== "-") {
@@ -144,12 +242,9 @@ const App = () => {
     };
 
     const handleClear = () => {
-        setCurrentOperator("");
         setCurrentValue("0");
         setPreviousValue("");
         setFormula("");
-        setLastKey("");
-        setCurrentSign("pos");
         setEvaluated("");
     };
 
@@ -168,115 +263,14 @@ const App = () => {
     return (
         <div id="calculator" className="card">
             <Display currentValue={currentValue} formula={formula} />
-
+            <NumberButtons handleNumberClick={handleNumberClick} />
+            <OperatorButtons handleOperatorClick={handleOperatorClick} />
             <CalculatorButton
                 id="clear"
                 handleClick={handleClear}
                 value={"clear"}
                 className="button btn">
                 AC
-            </CalculatorButton>
-            <CalculatorButton
-                id="division"
-                handleClick={handleOperatorClick}
-                value={"/"}
-                className="button btn">
-                /
-            </CalculatorButton>
-
-            <CalculatorButton
-                id="seven"
-                handleClick={handleNumberClick}
-                value={7}
-                className="button btn">
-                7
-            </CalculatorButton>
-            <CalculatorButton
-                id="eight"
-                handleClick={handleNumberClick}
-                value={8}
-                className="button btn">
-                8
-            </CalculatorButton>
-            <CalculatorButton
-                id="nine"
-                handleClick={handleNumberClick}
-                value={9}
-                className="button btn">
-                9
-            </CalculatorButton>
-            <CalculatorButton
-                id="multiply"
-                handleClick={handleOperatorClick}
-                value={"*"}
-                className="button btn">
-                X
-            </CalculatorButton>
-
-            <CalculatorButton
-                id="four"
-                handleClick={handleNumberClick}
-                value={4}
-                className="button btn">
-                4
-            </CalculatorButton>
-            <CalculatorButton
-                id="five"
-                handleClick={handleNumberClick}
-                value={5}
-                className="button btn">
-                5
-            </CalculatorButton>
-            <CalculatorButton
-                id="six"
-                handleClick={handleNumberClick}
-                value={6}
-                className="button btn">
-                6
-            </CalculatorButton>
-            <CalculatorButton
-                id="subtract"
-                handleClick={handleOperatorClick}
-                value={"-"}
-                className="button btn">
-                -
-            </CalculatorButton>
-
-            <CalculatorButton
-                id="one"
-                handleClick={handleNumberClick}
-                value={1}
-                className="button btn">
-                1
-            </CalculatorButton>
-            <CalculatorButton
-                id="two"
-                handleClick={handleNumberClick}
-                value={2}
-                className="button btn">
-                2
-            </CalculatorButton>
-            <CalculatorButton
-                id="three"
-                handleClick={handleNumberClick}
-                value={3}
-                className="button btn">
-                3
-            </CalculatorButton>
-            <CalculatorButton
-                id="add"
-                handleClick={handleOperatorClick}
-                value={"+"}
-                className="button btn">
-                +
-            </CalculatorButton>
-
-            <CalculatorButton
-                id="zero"
-                handleClick={handleNumberClick}
-                value={0}
-                className="button btn">
-                0
             </CalculatorButton>
             <CalculatorButton
                 id="decimal"

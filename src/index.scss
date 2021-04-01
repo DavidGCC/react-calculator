@@ -4,6 +4,10 @@ $theme: (
     "dark-red": #66003b,
     "button-bg": #99003b,
     "light-red": #cc003b,
+    "operators": #cc0350,
+    "equals": #218200,
+    "numbers": #99003b,
+    "clear": #cc003b
 );
 
 $button-ids: display, clear, division, multiply, seven, eight, nine, add, four,
@@ -87,5 +91,21 @@ body {
         h2 {
             min-height: 2rem;
         }
+    }
+
+    .operators {
+        background-color: map-get($map: $theme, $key: "operators");
+    }
+
+    #equals {
+        background-color: map-get($map: $theme, $key: "equals");
+    }
+
+    .numbers {
+        background-color: map-get($map: $theme, $key: "numbers");
+    }
+
+    #clear {
+        background-color: map-get($map: $theme, $key: "clear");
     }
 }
