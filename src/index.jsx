@@ -200,7 +200,7 @@ const App = () => {
 
     const handleNumberClick = ({ target }) => {
         if (!currentValue.includes("LIMIT")) {
-            if (currentValue.length >= 23) {
+            if (currentValue.length >= 21) {
                 maxDigitNumber();
             } else if (evaluated) {
                 setCurrentValue(target.value);
